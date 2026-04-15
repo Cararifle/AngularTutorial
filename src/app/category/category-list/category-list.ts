@@ -25,6 +25,12 @@ export class CategoryListComponent implements OnInit {
     public dialog: MatDialog,
   ) {}
 
+  ngOnInit(): void {
+    this.categoryService
+      .getCategories()
+      .subscribe((categories) => (this.dataSource.data = categories));
+  }
+
   createCategory() {
     const dialogRef = this.dialog.open(CategoryEditComponent, {
       data: {},
@@ -35,9 +41,13 @@ export class CategoryListComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.categoryService
-      .getCategories()
-      .subscribe((categories) => (this.dataSource.data = categories));
+  editCategory(category: Category) {
+    const dialogRef = this.dialog.open(CategoryEditComponent, {
+      data: { category },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      this.ngOnInit();
+    });
   }
 }

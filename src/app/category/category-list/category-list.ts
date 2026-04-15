@@ -6,43 +6,38 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CategoryService } from '../category';
-import { MatDialog } from '@angular/material/dialog'
-import { CategoryEdit } from '../category-edit/category-edit';
+import { MatDialog } from '@angular/material/dialog';
+import { CategoryEditComponent } from '../category-edit/category-edit';
 
 @Component({
-    selector: 'app-category-list',
-    standalone: true,
-    imports: [
-        MatButtonModule,
-        MatIconModule,
-        MatTableModule,
-        CommonModule
-    ],
-    templateUrl: './category-list.html',
-    styleUrl: './category-list.scss'
+  selector: 'app-category-list',
+  standalone: true,
+  imports: [MatButtonModule, MatIconModule, MatTableModule, CommonModule],
+  templateUrl: './category-list.html',
+  styleUrl: './category-list.scss',
 })
-export class CategoryListComponent implements OnInit{
-    dataSource = new MatTableDataSource<Category>();
-    displayedColumns: string[] = ['id', 'name', 'action'];
+export class CategoryListComponent implements OnInit {
+  dataSource = new MatTableDataSource<Category>();
+  displayedColumns: string[] = ['id', 'name', 'action'];
 
-    constructor(
+  constructor(
     private categoryService: CategoryService,
     public dialog: MatDialog,
-  ) { }
+  ) {}
 
   createCategory() {
-    const dialogRef = this.dialog.open(CategoryEdit, {
-      data: {}
+    const dialogRef = this.dialog.open(CategoryEditComponent, {
+      data: {},
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       this.ngOnInit();
     });
   }
 
-    ngOnInit(): void {
-        this.categoryService.getCategories().subscribe(
-            categories => this.dataSource.data = categories
-        );
-    }
+  ngOnInit(): void {
+    this.categoryService
+      .getCategories()
+      .subscribe((categories) => (this.dataSource.data = categories));
+  }
 }

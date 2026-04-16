@@ -27,9 +27,13 @@ export class CategoryListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categoryService
-      .getCategories()
-      .subscribe((categories) => (this.dataSource.data = categories));
+    this.categoryService.getCategories().subscribe({
+      next: (categories) => (this.dataSource.data = categories),
+      error: (err) => {
+        console.error('Error loading categories:', err);
+        this.dataSource.data = [];
+      },
+    });
   }
 
   createCategory() {

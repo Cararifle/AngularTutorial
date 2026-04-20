@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Pageable } from '../core/model/page/Pageable';
 import { Observable, of } from 'rxjs';
-import { AuthorPage } from './model/AuthorPage';
-import { AUTHOR_DATA } from './model/mock-authors';
+import { Pageable } from '../core/model/page/Pageable';
 import { Author } from './model/Author';
+import { AuthorPage } from './model/AuthorPage';
 import { HttpClient } from '@angular/common/http';
-import { AUTHOR_DATA_LIST } from './model/mock-authors-list';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +28,6 @@ export class AuthorService {
   }
 
   getAllAuthors(): Observable<Author[]> {
-    return of(AUTHOR_DATA_LIST);
+    return this.http.get<Author[]>(this.baseUrl);
   }
 }

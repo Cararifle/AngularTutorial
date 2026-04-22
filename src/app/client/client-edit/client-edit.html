@@ -29,12 +29,13 @@
         required
         (ngModelChange)="errorNameTaken = false"
       />
-      @if (!client.name) {
-        <mat-error>El nombre es requerido</mat-error>
-      } @else if (errorNameTaken) {
-        <mat-error>El nombre ya está en uso</mat-error>
-      }
     </mat-form-field>
+
+    @if (!client.name) {
+      <mat-error>El nombre es obligatorio</mat-error>
+    } @else if (errorNameTaken) {
+      <mat-error>El nombre ya está en uso</mat-error>
+    }
   </form>
 
   <div class="buttons">

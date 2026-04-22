@@ -15,4 +15,8 @@ export const routes: Routes = [
     path: 'games',
     loadComponent: () => import('../app/game/game-list/game-list').then((m) => m.GameList),
   },
+  {
+    path: 'clients',
+    loadComponent: () => import('../app/client/client-list/client-list').then((m) => m.ClientList),
+  },
 ];

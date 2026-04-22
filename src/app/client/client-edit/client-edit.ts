@@ -14,6 +14,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrl: './client-edit.scss',
 })
 export class ClientEdit implements OnInit {
+  errorNameTaken: boolean = false;
+
   client: Client;
 
   constructor(
@@ -27,8 +29,16 @@ export class ClientEdit implements OnInit {
   }
 
   onSave() {
-    this.clientService.saveClient(this.client).subscribe(() => {
-      this.dialogRef.close();
+    this.clientService.saveClient(this.client).subscribe({
+      next: () => {
+        this.errorNameTaken = false;
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        if (err.status === 409) {
+          this.errorNameTaken = true;
+        }
+      },
     });
   }
 

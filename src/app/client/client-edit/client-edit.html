@@ -27,8 +27,13 @@
         [(ngModel)]="client.name"
         name="name"
         required
+        (ngModelChange)="errorNameTaken = false"
       />
-      <mat-error>El nombre no puede estar vacío</mat-error>
+      @if (!client.name) {
+        <mat-error>El nombre es requerido</mat-error>
+      } @else if (errorNameTaken) {
+        <mat-error>El nombre ya está en uso</mat-error>
+      }
     </mat-form-field>
   </form>
 

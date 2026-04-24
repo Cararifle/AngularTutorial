@@ -19,23 +19,28 @@ export class LoanService {
     clientId?: number,
     date?: Date,
   ): Observable<LoanPage> {
-    const body: any = { pageable };
+    const params = new URLSearchParams();
     if (gameId != null) {
-      body.gameId = gameId;
+      params.set('idGame', gameId.toString());
     }
     if (clientId != null) {
-      body.clientId = clientId;
+      params.set('idClient', clientId.toString());
     }
     if (date) {
-      body.date = date;
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const dateStr = `${day}/${month}/${year}`;
+      params.set('date', dateStr);
     }
 
-    return this.http.post<LoanPage>(this.baseUrl, body);
+    const url = params.toString() ? `${this.baseUrl}?${params.toString()}` : this.baseUrl;
+    return this.http.post<LoanPage>(url, { pageable });
   }
 
   saveLoan(loan: Loan): Observable<Loan> {
-    const { id } = loan;
-    const url = id ? `${this.baseUrl}/${id}` : this.baseUrl;
+    const hasId = loan.id !== undefined && loan.id !== null;
+    const url = hasId ? `${this.baseUrl}/${loan.id}` : this.baseUrl;
     return this.http.put<Loan>(url, loan);
   }
 

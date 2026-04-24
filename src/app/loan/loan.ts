@@ -25,7 +25,7 @@ export class LoanService {
       filtered = filtered.filter((loan) => loan.client.id === clientId);
     }
     if (date) {
-      filtered = filtered.filter((loan) => loan.loanDate >= date && date <= loan.returnDate);
+      filtered = filtered.filter((loan) => new Date(loan.loanDate) <= date && date <= new Date(loan.returnDate));
     }
     const totalElements = filtered.length;
     const start = pageable.pageNumber * pageable.pageSize;
@@ -43,7 +43,7 @@ export class LoanService {
     return of(null);
   }
 
-  deleteLoan(loan: Loan): Observable<void> {
+  deleteLoan(idLoan: number): Observable<void> {
     return of(null);
   }
 }

@@ -23,6 +23,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-loan-list',
+  standalone: true,
   imports: [
     MatPaginator,
     MatButtonModule,

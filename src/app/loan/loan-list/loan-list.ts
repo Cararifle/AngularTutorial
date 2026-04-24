@@ -15,7 +15,7 @@ import { Loan } from '../model/loan';
 import { Game } from '../../game/model/Game';
 import { Client } from '../../client/model/client';
 import { ClientService } from '../../client/client';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Pageable } from '../../core/model/page/Pageable';
 import { DialogConfirmationComponent } from '../../core/dialog-confirmation/dialog-confirmation';
 import { LoanEdit } from '../loan-edit/loan-edit';
@@ -36,6 +36,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatDialogModule,
   ],
   templateUrl: './loan-list.html',
   styleUrl: './loan-list.scss',
@@ -120,7 +121,7 @@ export class LoanList implements OnInit {
 
   editLoan(loan: Loan) {
     const dialogRef = this.dialog.open(LoanEdit, {
-      data: {},
+      data: { loan },
     });
 
     dialogRef.afterClosed().subscribe((result) => {

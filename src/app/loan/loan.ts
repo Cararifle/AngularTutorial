@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { LOAN_DATA } from './model/mock-loan';
+import { Observable } from 'rxjs';
 import { Pageable } from '../core/model/page/Pageable';
 import { Loan } from './model/loan';
 import { LoanPage } from './model/LoanPage';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoanService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
+
+  private baseUrl = 'http://localhost:8080/loan';
 
   getLoans(
     pageable: Pageable,
@@ -17,33 +19,27 @@ export class LoanService {
     clientId?: number,
     date?: Date,
   ): Observable<LoanPage> {
-    let filtered = LOAN_DATA;
-    if (gameId) {
-      filtered = filtered.filter((loan) => loan.game.id === gameId);
+    const body: any = { pageable };
+    if (gameId != null) {
+      body.gameId = gameId;
     }
-    if (clientId) {
-      filtered = filtered.filter((loan) => loan.client.id === clientId);
+    if (clientId != null) {
+      body.clientId = clientId;
     }
     if (date) {
-      filtered = filtered.filter((loan) => new Date(loan.loanDate) <= date && date <= new Date(loan.returnDate));
+      body.date = date;
     }
-    const totalElements = filtered.length;
-    const start = pageable.pageNumber * pageable.pageSize;
-    const end = start + pageable.pageSize;
-    const content = filtered.slice(start, end);
-    const loanPage: LoanPage = {
-      content,
-      pageable,
-      totalElements,
-    };
-    return of(loanPage);
+
+    return this.http.post<LoanPage>(this.baseUrl, body);
   }
 
-  saveLoan(loan: Loan): Observable<void> {
-    return of(null);
+  saveLoan(loan: Loan): Observable<Loan> {
+    const { id } = loan;
+    const url = id ? `${this.baseUrl}/${id}` : this.baseUrl;
+    return this.http.put<Loan>(url, loan);
   }
 
   deleteLoan(idLoan: number): Observable<void> {
-    return of(null);
+    return this.http.delete<void>(`${this.baseUrl}/${idLoan}`);
   }
 }

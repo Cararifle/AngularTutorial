@@ -73,9 +73,26 @@ export class LoanEdit implements OnInit {
     });
   }
 
+  backendErrors: Record<string, string | null> = {
+    GAME_ALREADY_LOANED: null,
+    CLIENT_LOAN_LIMIT_EXCEEDED: null,
+    LOAN_PERIOD_EXCEEDS_LIMIT: null,
+    RETURN_DATE_BEFORE_LOAN_DATE: null,
+  };
+
   onSave() {
-    this.loanService.saveLoan(this.loan).subscribe((result) => {
-      this.dialogRef.close();
+    this.loanService.saveLoan(this.loan).subscribe({
+      next: () => {
+        this.backendErrors = {};
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        this.backendErrors = {};
+
+        if (err.status === 409 && err.error?.errorCode) {
+          this.backendErrors[err.error.errorCode] = err.error.message;
+        }
+      },
     });
   }
 

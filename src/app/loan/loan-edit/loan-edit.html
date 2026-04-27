@@ -20,12 +20,18 @@
 
     <mat-form-field>
       <mat-label>Titulo del juego</mat-label>
-      <mat-select disableRipple [(ngModel)]="loan.game" name="game" required>
+      <mat-select
+        disableRipple
+        [(ngModel)]="loan.game"
+        name="game"
+        required
+        (ngModelChange)="backendErrors['GAME_ALREADY_LOANED'] = null"
+      >
         @for (game of games; track game.id) {
           <mat-option [value]="game">{{ game.title }}</mat-option>
         }
       </mat-select>
-      <mat-error>El titulo del juego no puede estar vacío</mat-error>
+      <mat-error>El juego es obligatorio</mat-error>
     </mat-form-field>
 
     <mat-form-field>
@@ -47,6 +53,7 @@
         (dateChange)="onLoanDateChange($event.value)"
         name="loanDatePicker"
         required
+        (ngModelChange)="backendErrors['CLIENT_LOAN_LIMIT_EXCEEDED'] = null"
       />
       <mat-datepicker-toggle matSuffix [for]="loanDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #loanDatePicker></mat-datepicker>
@@ -63,11 +70,25 @@
         [min]="loan.loanDatePickerValue"
         name="returnDatePicker"
         required
+        (ngModelChange)="
+          backendErrors['RETURN_DATE_BEFORE_LOAN_DATE'] = null;
+          backendErrors['LOAN_PERIOD_EXCEEDS_LIMIT'] = null
+        "
       />
       <mat-datepicker-toggle matSuffix [for]="returnDatePicker"></mat-datepicker-toggle>
       <mat-datepicker #returnDatePicker></mat-datepicker>
       <mat-error>La fecha de devolución es obligatoria</mat-error>
     </mat-form-field>
+
+    @if (backendErrors['GAME_ALREADY_LOANED']) {
+      <mat-error>{{ backendErrors['GAME_ALREADY_LOANED'] }}</mat-error>
+    } @else if (backendErrors['CLIENT_LOAN_LIMIT_EXCEEDED']) {
+      <mat-error>{{ backendErrors['CLIENT_LOAN_LIMIT_EXCEEDED'] }}</mat-error>
+    } @else if (backendErrors['RETURN_DATE_BEFORE_LOAN_DATE']) {
+      <mat-error>{{ backendErrors['RETURN_DATE_BEFORE_LOAN_DATE'] }}</mat-error>
+    } @else if (backendErrors['LOAN_PERIOD_EXCEEDS_LIMIT']) {
+      <mat-error>{{ backendErrors['LOAN_PERIOD_EXCEEDS_LIMIT'] }}</mat-error>
+    }
   </form>
 
   <div class="buttons">

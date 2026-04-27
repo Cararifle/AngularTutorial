@@ -1,0 +1,98 @@
+<div class="container">
+  @if (loan.id) {
+    <h1>Modificar prestamo</h1>
+  } @else {
+    <h1>Crear prestamo</h1>
+  }
+
+  <form>
+    <mat-form-field>
+      <mat-label>Identificador</mat-label>
+      <input
+        type="text"
+        matInput
+        placeholder="Identificador"
+        [(ngModel)]="loan.id"
+        name="id"
+        disabled
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Titulo del juego</mat-label>
+      <mat-select
+        disableRipple
+        [(ngModel)]="loan.game"
+        name="game"
+        required
+        (ngModelChange)="backendErrors['GAME_ALREADY_LOANED'] = null"
+      >
+        @for (game of games; track game.id) {
+          <mat-option [value]="game">{{ game.title }}</mat-option>
+        }
+      </mat-select>
+      <mat-error>El juego es obligatorio</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Nombre del cliente</mat-label>
+      <mat-select disableRipple [(ngModel)]="loan.client" name="client" required>
+        @for (client of clients; track client.id) {
+          <mat-option [value]="client">{{ client.name }}</mat-option>
+        }
+      </mat-select>
+      <mat-error>El nombre del cliente no puede estar vacío</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Fecha de préstamo</mat-label>
+      <input
+        matInput
+        [matDatepicker]="loanDatePicker"
+        [(ngModel)]="loan.loanDatePickerValue"
+        (dateChange)="onLoanDateChange($event.value)"
+        name="loanDatePicker"
+        required
+        (ngModelChange)="backendErrors['CLIENT_LOAN_LIMIT_EXCEEDED'] = null"
+      />
+      <mat-datepicker-toggle matSuffix [for]="loanDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #loanDatePicker></mat-datepicker>
+      <mat-error>La fecha de préstamo es obligatoria</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Fecha de devolución</mat-label>
+      <input
+        matInput
+        [matDatepicker]="returnDatePicker"
+        [(ngModel)]="loan.returnDatePickerValue"
+        (dateChange)="onReturnDateChange($event.value)"
+        [min]="loan.loanDatePickerValue"
+        name="returnDatePicker"
+        required
+        (ngModelChange)="
+          backendErrors['RETURN_DATE_BEFORE_LOAN_DATE'] = null;
+          backendErrors['LOAN_PERIOD_EXCEEDS_LIMIT'] = null
+        "
+      />
+      <mat-datepicker-toggle matSuffix [for]="returnDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #returnDatePicker></mat-datepicker>
+      <mat-error>La fecha de devolución es obligatoria</mat-error>
+    </mat-form-field>
+
+    @if (backendErrors['GAME_ALREADY_LOANED']) {
+      <mat-error>{{ backendErrors['GAME_ALREADY_LOANED'] }}</mat-error>
+    } @else if (backendErrors['CLIENT_LOAN_LIMIT_EXCEEDED']) {
+      <mat-error>{{ backendErrors['CLIENT_LOAN_LIMIT_EXCEEDED'] }}</mat-error>
+    } @else if (backendErrors['RETURN_DATE_BEFORE_LOAN_DATE']) {
+      <mat-error>{{ backendErrors['RETURN_DATE_BEFORE_LOAN_DATE'] }}</mat-error>
+    } @else if (backendErrors['LOAN_PERIOD_EXCEEDS_LIMIT']) {
+      <mat-error>{{ backendErrors['LOAN_PERIOD_EXCEEDS_LIMIT'] }}</mat-error>
+    }
+  </form>
+
+  <div class="buttons">
+    <button mat-stroked-button (click)="onClose()">Cerrar</button>
+    <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
+  </div>
+</div>

@@ -19,4 +19,8 @@ export const routes: Routes = [
     path: 'clients',
     loadComponent: () => import('../app/client/client-list/client-list').then((m) => m.ClientList),
   },
+  {
+    path: 'loans',
+    loadComponent: () => import('../app/loan/loan-list/loan-list').then((m) => m.LoanList),
+  },
 ];

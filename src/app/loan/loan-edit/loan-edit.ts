@@ -82,4 +82,23 @@ export class LoanEdit implements OnInit {
   onClose() {
     this.dialogRef.close();
   }
+
+  onLoanDateChange(date: Date | null) {
+    if (date) {
+      this.loan.loanDate = this.toLocalDateString(date);
+    }
+  }
+
+  onReturnDateChange(date: Date | null) {
+    if (date) {
+      this.loan.returnDate = this.toLocalDateString(date);
+    }
+  }
+
+  private toLocalDateString(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 }

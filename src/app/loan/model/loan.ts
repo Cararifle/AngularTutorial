@@ -5,6 +5,8 @@ export class Loan {
   id: number;
   game: Game;
   client: Client;
-  loanDate: Date | null;
-  returnDate: Date | null;
+  loanDate: String;
+  returnDate: String;
+  loanDatePickerValue: Date | null = null;
+  returnDatePickerValue: Date | null = null;
 }

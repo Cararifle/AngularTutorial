@@ -43,8 +43,9 @@
       <input
         matInput
         [matDatepicker]="loanDatePicker"
-        [(ngModel)]="loan.loanDate"
-        name="loanDate"
+        [(ngModel)]="loan.loanDatePickerValue"
+        (dateChange)="onLoanDateChange($event.value)"
+        name="loanDatePicker"
         required
       />
       <mat-datepicker-toggle matSuffix [for]="loanDatePicker"></mat-datepicker-toggle>
@@ -57,9 +58,10 @@
       <input
         matInput
         [matDatepicker]="returnDatePicker"
-        [(ngModel)]="loan.returnDate"
-        name="returnDate"
-        [min]="loan.loanDate"
+        [(ngModel)]="loan.returnDatePickerValue"
+        (dateChange)="onReturnDateChange($event.value)"
+        [min]="loan.loanDatePickerValue"
+        name="returnDatePicker"
         required
       />
       <mat-datepicker-toggle matSuffix [for]="returnDatePicker"></mat-datepicker-toggle>
